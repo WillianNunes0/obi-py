@@ -11,4 +11,35 @@ T X indicando que X segundos se passaram entre o evento anterior e o evento post
 Se não há registro do tipo T X entre dois registros de eventos consecutivos significa que exatamente 1 segundo se passou entre esses dois eventos. O Tempo de Resposta de uma mensagem é o tempo que se passa entre o recebimento da mensagem por Sara e o envio da resposta a essa mensagem por Sara. Se um amigo recebeu respostas para todas as suas mensagens,
 o Tempo de Resposta Total para esse amigo é a soma dos Tempos de Respostas para as mensagens desse amigo; caso contrário o Tempo de Resposta Total para esse amigo é -1. Dada a lista de registros do aplicativo de Sara, sua tarefa é determinar o Tempo de Resposta Total para cada amigo.
 """
+registros = int(input())
 
+tempo_de_resposta =  {}
+esperando_resposta = {}
+ultimo_tempo = 0
+
+for _ in range(registros):
+    entrada = input().split()
+    tipo = entrada[0]
+    x = int(entrada[1])
+
+    if tipo == 'T':
+        ultimo_tempo = ultimo_tempo + x - 1
+    else:
+        ultimo_tempo += 1
+    
+    if tipo == 'R':
+        if x not in tempo_de_resposta:
+            tempo_de_resposta[x] = 0
+        esperando_resposta[x] = ultimo_tempo
+
+    
+    elif tipo == 'E':
+        if x in esperando_resposta:
+            tempo_de_resposta[x] = tempo_de_resposta + (ultimo_tempo-esperando_resposta[x])
+            del esperando_resposta[x]
+
+for amigo in esperando_resposta :
+    tempo_de_resposta[amigo] = -1
+
+for amigo in sorted(tempo_de_resposta.keys()):
+    print(f'{amigo} {tempo_de_resposta[amigo]}')
